@@ -1,0 +1,11 @@
+{
+    "application_id": "",
+    "public_key": "",
+    "client_secret": "",
+    "bot_token": "",
+    "redirect_url": "http://localhost:8080/auth",
+    "mongodb_url": "",
+    "mongodb_database": "",
+    "mongodb_collection": ""
+    
+}
