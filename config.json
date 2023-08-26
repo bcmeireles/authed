@@ -2,10 +2,13 @@
     "application_id": "",
     "public_key": "",
     "client_secret": "",
+    "guild_id": "",
     "bot_token": "",
+    "verified_role_id": "",
+    "base_url": "http://localhost:8080/",
     "redirect_url": "http://localhost:8080/auth",
     "mongodb_url": "",
-    "mongodb_database": "",
-    "mongodb_collection": "",
+    "mongodb_database": "authed",
+    "mongodb_collection": "users",
     "success_url": "http://localhost:8080/success"
 }
