@@ -22,14 +22,14 @@ try {
     console.error('Error reading command files:', error);
 }
 
-const rest = new REST().setToken(bot_token);
+const rest = new REST().setToken(process.env.bot_token);
 
 (async () => {
     try {
         console.log(`Started refreshing ${commands.length} application (/) commands.`);
 
         const data = await rest.put(
-            Routes.applicationGuildCommands(application_id, guild_id),
+            Routes.applicationGuildCommands(process.env.application_id, process.env.guild_id),
             { body: commands },
         );
 

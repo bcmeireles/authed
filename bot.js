@@ -43,4 +43,4 @@ client.on(Events.InteractionCreate, async interaction => {
 	}
 });
 
-client.login(config.bot_token)
+client.login(process.env.bot_token)

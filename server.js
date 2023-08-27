@@ -6,27 +6,27 @@ const MongoClient = require('mongodb').MongoClient;
 const discord = require("discord.js");
 
 const config = require("./config.json")
-const client = new MongoClient(config.mongodb_url, {useUnifiedTopology: true});
+const client = new MongoClient(process.env.mongodb_url, {useUnifiedTopology: true});
 
 const app = express();
 
 app.get("/", (req, res) => {
     res.redirect([
         "https://discordapp.com/oauth2/authorize",
-        `?client_id=${config.application_id}`,
+        `?client_id=${process.env.application_id}`,
         "&scope=guilds.join",
         "&response_type=code",
-        `&callback_uri=${config.redirect_url}`
+        `&callback_uri=${process.env.redirect_url}`
       ].join(''));
 });
 
 app.get("/auth", (req, res) => {
     const code = req.query.code;
-    const cred = btoa(`${config.application_id}:${config.client_secret}`);
+    const cred = btoa(`${process.env.application_id}:${process.env.client_secret}`);
 
     axios.post("https://discordapp.com/api/oauth2/token", {
-        "client_id": config.application_id,
-        "client_secret": config.client_secret,
+        "client_id": process.env.application_id,
+        "client_secret": process.env.client_secret,
         "grant_type": "authorization_code",
         "code": code
     }, {
@@ -47,16 +47,16 @@ app.get("/auth", (req, res) => {
             let user_id = resp.data.id;
             
             client.connect().then(() => {
-                return client.db(config.mongodb_database).collection(config.mongodb_collection).insertOne({
+                return client.db(process.env.mongodb_database).collection(process.env.mongodb_collection).insertOne({
                     "user_id": user_id,
                     "access_token": access_token,
                     "refresh_token": refresh_token
                 }).then(() => {
                     return client.close();
                 }).then(() => {
-                    axios.put(`https://discordapp.com/api/guilds/${config.guild_id}/members/${user_id}/roles/${config.verified_role_id}`, {}, {
+                    axios.put(`https://discordapp.com/api/guilds/${process.env.guild_id}/members/${user_id}/roles/${process.env.verified_role_id}`, {}, {
                         headers: {
-                            Authorization: `Bot ${config.bot_token}`,
+                            Authorization: `Bot ${process.env.bot_token}`,
                             "Content-Type": "application/json"
                         }
                     }).then(response => {
@@ -73,7 +73,7 @@ app.get("/auth", (req, res) => {
     
     });
 
-    res.redirect(config.success_url);
+    res.redirect(process.env.success_url);
 
 });
 
