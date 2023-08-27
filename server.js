@@ -47,7 +47,7 @@ app.get("/auth", (req, res) => {
             let user_id = resp.data.id;
             
             client.connect().then(() => {
-                return client.db("authed").collection("users").insertOne({
+                return client.db(config.mongodb_database).collection(config.mongodb_collection).insertOne({
                     "user_id": user_id,
                     "access_token": access_token,
                     "refresh_token": refresh_token

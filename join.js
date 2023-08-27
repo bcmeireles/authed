@@ -20,7 +20,7 @@ function join(access_token, refresh_token, user_id, guild_id) {
                 let new_access_token = resp.data.access_token;
                 let new_refresh_token = resp.data.refresh_token;
                 client.connect().then(() => {
-                    return client.db("authed").collection("users").updateOne({
+                    return client.db(config.mongodb_database).collection(config.mongodb_collection).updateOne({
                         "user_id": user_id
                     }, {
                         $set: {
@@ -40,3 +40,18 @@ function join(access_token, refresh_token, user_id, guild_id) {
         return false;
     });
 }
+
+const guild = prompt("Guild ID: ");
+
+client.connect().then(() => {
+    return client.db(config.mongodb_database).collection(config.mongodb_collection).find({}).toArray();
+}).then((users) => {
+    return client.close().then(() => {
+        return users;
+    })
+}).then((users) => {
+    users.forEach((user) => {
+        join(user.access_token, user.refresh_token, user.user_id, guild);
+        count++;
+    })
+});
